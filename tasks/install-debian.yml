@@ -1,0 +1,24 @@
+---
+- name: "Install required libraries for 64-bit machines"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - libc6:i386
+    - libncurses5:i386
+    - libstdc++6:i386
+    - lib32z1
+    - libbz2-1.0:i386
+
+- name: "Download Android Studio tar"
+  ansible.builtin.get_url:
+    url: "{{ androidstudio_download_url }}"
+    dest: "/tmp"
+    mode: 0755
+    checksum: "sha256:{{ androidstudio_checksum }}"
+
+- name: "Untar Android Sudio"
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ androidstudio_tar }}"
+    dest: "/usr/local"
+    copy: no
